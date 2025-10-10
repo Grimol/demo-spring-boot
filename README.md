@@ -7,6 +7,18 @@
 # Requête avec curl
 curl.exe -i "http://localhost:8080/hello"
 
+# Utilisation du Makefile
+## Build jar local
+make build
+
+## Construire l'image Docker
+make docker-build
+
+## Lancer le conteneur sur le port 8080
+make docker-run
+
+## Arrêter le conteneur
+make docker-stop
 
 # Git Workflow
 Ce projet utilise une organisation simple et lisible pour la gestion du code :
