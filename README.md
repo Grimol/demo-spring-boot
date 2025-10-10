@@ -33,13 +33,16 @@ Ce projet utilise une organisation simple et lisible pour la gestion du code :
         - git add .
         - git commit -m "feat: add CRUD endpoints for projects"
 
-4. **Fusionner dans **`main`** après validation**
+4. **Push des commits en fin de journée sur la branche active si ce n'est pas fini**
+    - git push -u origin feat/nom-fonctionnalite
+
+5. **Fusionner dans **`main`** après validation**
     - git checkout main
     - git pull origin main
     - git merge feat/nom-fonctionnalite
     - git push origin main
 
-5. **Supprimer la branche feature si plus utile**
+6. **Supprimer la branche feature si plus utile**
     - git branch -d feat/nom-fonctionnalite
     - git push origin --delete feat/nom-fonctionnalite
 

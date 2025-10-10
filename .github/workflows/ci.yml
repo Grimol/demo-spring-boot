@@ -6,18 +6,53 @@ on:
   pull_request:
     branches: [ "main" ]
 
-jobs:
-  build-test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
+# Évite de lancer plusieurs builds simultanés sur la même branche/pull
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
 
-      - name: "Set up JDK 21"
+jobs:
+  build_test:
+    name: Build & Test (Java 21)
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Optionnel mais pratique si tu utilises le wrapper Maven
+      - name: Make mvnw executable (Linux)
+        run: |
+          if [ -f "./mvnw" ]; then
+            chmod +x mvnw
+          fi
+
+      - name: Set up JDK 21 (Temurin) + Maven cache
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '21'
           cache: maven
 
-      - name: Build & test (Maven)
-        run: mvn -B -ntp verify
+      # Compile + tests + packaging; -ntp = quiet, -B = batch
+      - name: Build & test
+        run: |
+          if [ -f "./mvnw" ]; then
+            ./mvnw -B -ntp verify
+          else
+            mvn -B -ntp verify
+          fi
+
+      # (Optionnel) Publie les rapports de tests en artefacts pour debug
+      - name: Upload test reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: surefire-reports
+          path: |
+            **/target/surefire-reports/**
+            **/target/failsafe-reports/**
+          if-no-files-found: ignore
