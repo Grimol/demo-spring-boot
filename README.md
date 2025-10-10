@@ -19,7 +19,7 @@ Ce projet utilise une organisation simple et lisible pour la gestion du code :
     - git checkout -b feat/nom-fonctionnalite
 
 2. **Coder et tester en local**
-    - pytest -q
+    - ./mvnw -q test
 
 3. **Commits clairs et réguliers**
     - Un commit = une modification logique
