@@ -295,3 +295,82 @@ public class UserController {
 - Séparer **Controller** → **Service** → **Repository** (couches claires).
 - Garder `@Configuration` et `@Bean` pour les cas **nécessaires** (pas de sur-configuration).
 - Placer la classe `@SpringBootApplication` à la **racine du package** pour un **component scan** simple et fiable.
+
+
+
+
+
+💡 3. Comment Spring les utilise ensemble (architecture typique)
+[Client HTTP]  →  [Controller]  →  [Service]  →  [Repository]  →  [Base de données]
+
+🔹 @RestController / @Controller
+
+→ Reçoit la requête du client (front-end, Angular, Postman, etc.)
+→ Exécute la logique correspondante via le service
+→ Retourne une réponse (JSON, HTML, etc.)
+
+```java
+@RestController
+@RequestMapping("/users")
+public class UserController {
+    private final UserService userService;
+    
+    @Autowired
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
+
+    @GetMapping("/{id}")
+    public User getUser(@PathVariable Long id) {
+        return userService.findUserById(id);
+    }
+}
+```
+🔹 @Service
+
+→ Contient la logique métier (calculs, validations, règles)
+→ Appelle le repository pour lire/écrire des données
+
+```java
+@Service
+public class UserService {
+    private final UserRepository userRepository;
+
+    @Autowired
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    public User findUserById(Long id) {
+        return userRepository.findById(id)
+                             .orElseThrow(() -> new RuntimeException("User not found"));
+    }
+}
+```
+
+🔹 @Repository
+
+→ Communique avec la base de données (via JPA, JDBC, etc.)
+→ Spring y ajoute une traduction automatique des exceptions SQL
+
+```java
+@Repository
+public interface UserRepository extends JpaRepository<User, Long> {
+    // Aucune implémentation nécessaire, Spring Data JPA la génère
+}
+```
+🔹 @Component
+
+→ Utilisée pour tous les autres cas qui ne rentrent pas dans les trois précédents
+(par exemple : utilitaires, parseurs, planificateurs, services techniques…)
+
+```java
+@Component
+public class PasswordEncoderUtil {
+    public String encode(String password) {
+        return Base64.getEncoder().encodeToString(password.getBytes());
+    }
+}
+```
+
+
