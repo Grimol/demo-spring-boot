@@ -63,3 +63,42 @@ Ce projet utilise une organisation simple et lisible pour la gestion du code :
 - Commits petits et thématiques (éviter “fix trucs divers”).
 - Utiliser des branches **`feat/`**, **`fix/`**, **`chore/`**, **`docs/`** selon le type de travail.
 - La branche **`main`** reste toujours fonctionnelle et stable.
+
+### **Important à retenir sur Spring Boot**
+- Contrat d’API : Décrit de façon formelle les règles d’interaction entre un service fournisseur et un service consommateur.
+Il définit les routes disponibles, les formats de requêtes/réponses, les codes de statut, et les cas d’erreur attendus, assurant ainsi que les deux parties puissent communiquer correctement, indépendamment du langage utilisé.
+
+***📘 Exemple de contrat d’API — Récupérer un utilisateur par ID***
+
+***Endpoint :***
+```bash
+GET /users/{id}
+```
+
+***Description :***
+Récupère les informations d'un utilisateur à partir de son identifiant unique (**`id`**)
+
+***📨 Requête***
+```html
+GET /cashcards/{id} HTTP/1.1
+Host: api.example.com
+Authorization: Bearer <token>
+Content-Type: application/json
+```
+💬 **Note :** Aucun corps (**`Body`**) n’est requis pour cette requête.
+
+***📦 Réponses possibles***
+| Statut HTTP        | Signification                                      | Conditions                                                     |
+| ------------------ | -------------------------------------------------- | -------------------------------------------------------------- |
+| `200 OK`           | L'utilisateur a été trouvé et renvoyé avec succès. | L’utilisateur est **authentifié** et **autorisé**.             |
+| `401 Unauthorized` | Accès refusé.                                      | L’utilisateur est **non authentifié** ou **non autorisé**.     |
+| `404 Not Found`    | Aucun utilisateur trouvé avec cet ID.              | L’utilisateur est authentifié, mais la ressource n’existe pas. |
+
+***🧾 Exemple de réponse (JSON)***
+```json
+{
+  "id": 99,
+  "username": "johndoe",
+  "age": 28
+}
+```
