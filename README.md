@@ -106,6 +106,8 @@ Content-Type: application/json
 }
 ```
 
+Utiliser une route en POST va résulter d'une réponse HTTP Response Status Code 201 CREATED et d'un header contenant Location=/users/60 où 60 est l'UID de l'élément user.
+
 # **📚 Rappels — Stéréotypes & Configuration Spring**
 ## **🧭 Vue d’ensemble**
 
@@ -372,5 +374,18 @@ public class PasswordEncoderUtil {
     }
 }
 ```
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
