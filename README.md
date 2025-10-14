@@ -130,15 +130,16 @@ Header: Location=/users/42
 # **📚 Rappels — Stéréotypes & Configuration Spring**
 ## **🧭 Vue d’ensemble**
 
-| Annotation        | Rôle                        | Couche typique | Particularités                                        |
-| ----------------- | --------------------------- | -------------- | ----------------------------------------------------- |
-| `@Configuration`  | Classe de configuration     | Config         | Déclare des beans via `@Bean` (Java config)           |
-| `@Bean`           | Méthode qui déclare un bean | Config         | Contrôle fin de la création/initialisation du bean    |
-| `@Component`      | Composant générique         | Tous           | Base des stéréotypes (scannée par Spring)             |
-| `@Service`        | Logique métier              | Service        | Sémantique métier (mêmes capacités que `@Component`)  |
-| `@Repository`     | Accès aux données           | Persistence    | Traduction des exceptions DataAccess (Spring Data)    |
-| `@Controller`     | Contrôleur MVC (vues)       | Web MVC        | Renvoie des **vues** (HTML/Thymeleaf)                 |
-| `@RestController` | Contrôleur REST             | API            | `@Controller` + `@ResponseBody` → renvoie du **JSON** |
+| Annotation        | Rôle                        | Couche typique | Particularités                                                       |
+| ----------------- | --------------------------- | -------------- | -------------------------------------------------------------------- |
+| `@Configuration`  | Classe de configuration     | Config         | Déclare des beans via `@Bean` (Java config)                          |
+| `@Bean`           | Méthode qui déclare un bean | Config         | Contrôle fin de la création/initialisation du bean                   |
+| `@Component`      | Composant générique         | Tous           | Base des stéréotypes (scannée par Spring)                            |
+| `@Service`        | Logique métier              | Service        | Sémantique métier (mêmes capacités que `@Component`)                 |
+| `@Repository`     | Accès aux données           | Persistence    | Traduction des exceptions DataAccess (Spring Data)                   |
+| `@Controller`     | Contrôleur MVC (vues)       | Web MVC        | Renvoie des **vues** (HTML/Thymeleaf)                                |
+| `@RestController` | Contrôleur REST             | API            | `@Controller` + `@ResponseBody` → renvoie du **JSON**                |
+| `@DirtiesContext` | Context de test             | Test           | Nettoie la base après le test, ou après chaque test si sur la classe |
 
 ## **⚙️ @Configuration**
 
