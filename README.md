@@ -106,7 +106,26 @@ Content-Type: application/json
 }
 ```
 
+** Exemple de requête POST **
 Utiliser une route en POST va résulter d'une réponse HTTP Response Status Code 201 CREATED et d'un header contenant Location=/users/60 où 60 est l'UID de l'élément user.
+Requête
+```html
+POST /users HTTP/1.1
+Host: api.example.com
+Authorization: Bearer <token>
+Content-Type: application/json
+Body : { username: "Arthur" }
+```
+Réponse de l'API
+```java
+return  ResponseEntity
+        .created(uriOfCashCard)
+        .build();
+```
+```html
+HTTP/1.1 201 CREATED
+Header: Location=/users/42
+```
 
 # **📚 Rappels — Stéréotypes & Configuration Spring**
 ## **🧭 Vue d’ensemble**
