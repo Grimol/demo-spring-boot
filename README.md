@@ -106,18 +106,40 @@ Content-Type: application/json
 }
 ```
 
+** Exemple de requête POST **
+Utiliser une route en POST va résulter d'une réponse HTTP Response Status Code 201 CREATED et d'un header contenant Location=/users/60 où 60 est l'UID de l'élément user.
+Requête
+```html
+POST /users HTTP/1.1
+Host: api.example.com
+Authorization: Bearer <token>
+Content-Type: application/json
+Body : { username: "Arthur" }
+```
+Réponse de l'API
+```java
+return  ResponseEntity
+        .created(uriOfCashCard)
+        .build();
+```
+```html
+HTTP/1.1 201 CREATED
+Header: Location=/users/42
+```
+
 # **📚 Rappels — Stéréotypes & Configuration Spring**
 ## **🧭 Vue d’ensemble**
 
-| Annotation        | Rôle                        | Couche typique | Particularités                                        |
-| ----------------- | --------------------------- | -------------- | ----------------------------------------------------- |
-| `@Configuration`  | Classe de configuration     | Config         | Déclare des beans via `@Bean` (Java config)           |
-| `@Bean`           | Méthode qui déclare un bean | Config         | Contrôle fin de la création/initialisation du bean    |
-| `@Component`      | Composant générique         | Tous           | Base des stéréotypes (scannée par Spring)             |
-| `@Service`        | Logique métier              | Service        | Sémantique métier (mêmes capacités que `@Component`)  |
-| `@Repository`     | Accès aux données           | Persistence    | Traduction des exceptions DataAccess (Spring Data)    |
-| `@Controller`     | Contrôleur MVC (vues)       | Web MVC        | Renvoie des **vues** (HTML/Thymeleaf)                 |
-| `@RestController` | Contrôleur REST             | API            | `@Controller` + `@ResponseBody` → renvoie du **JSON** |
+| Annotation        | Rôle                        | Couche typique | Particularités                                                       |
+| ----------------- | --------------------------- | -------------- | -------------------------------------------------------------------- |
+| `@Configuration`  | Classe de configuration     | Config         | Déclare des beans via `@Bean` (Java config)                          |
+| `@Bean`           | Méthode qui déclare un bean | Config         | Contrôle fin de la création/initialisation du bean                   |
+| `@Component`      | Composant générique         | Tous           | Base des stéréotypes (scannée par Spring)                            |
+| `@Service`        | Logique métier              | Service        | Sémantique métier (mêmes capacités que `@Component`)                 |
+| `@Repository`     | Accès aux données           | Persistence    | Traduction des exceptions DataAccess (Spring Data)                   |
+| `@Controller`     | Contrôleur MVC (vues)       | Web MVC        | Renvoie des **vues** (HTML/Thymeleaf)                                |
+| `@RestController` | Contrôleur REST             | API            | `@Controller` + `@ResponseBody` → renvoie du **JSON**                |
+| `@DirtiesContext` | Context de test             | Test           | Nettoie la base après le test, ou après chaque test si sur la classe |
 
 ## **⚙️ @Configuration**
 
@@ -372,5 +394,18 @@ public class PasswordEncoderUtil {
     }
 }
 ```
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
