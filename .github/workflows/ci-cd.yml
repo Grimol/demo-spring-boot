@@ -129,33 +129,50 @@ jobs:
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     
     steps:
-    - name: ⏳ Wait for Render deployment
+    - name: 🚀 Wait and Test Deployment
       run: |
-        echo "⏳ Attente du déploiement Render automatique (2 minutes)..."
-        sleep 120
+        echo "🔍 Attente et vérification du déploiement Render..."
         
-    - name: 🧪 Test API endpoints
-      run: |
-        echo "🔍 Test des endpoints API..."
+        # Fonction de test de santé avec timeout étendu
+        test_health() {
+          local max_attempts=20  # 20 tentatives = 10 minutes max
+          local wait_time=30     # 30 secondes entre chaque tentative
+          
+          echo "🩺 Test du health endpoint (max ${max_attempts} tentatives, ${wait_time}s d'intervalle)..."
+          
+          for i in $(seq 1 $max_attempts); do
+            echo "⏳ Tentative $i/$max_attempts..."
+            
+            if curl -f -m 10 "${{ secrets.RENDER_URL }}/actuator/health" 2>/dev/null; then
+              echo "✅ Health check réussi à la tentative $i !"
+              return 0
+            else
+              if [ $i -eq $max_attempts ]; then
+                echo "❌ Health check échoué après $max_attempts tentatives"
+                return 1
+              fi
+              
+              echo "⚠️ Échec tentative $i, retry dans ${wait_time}s..."
+              sleep $wait_time
+            fi
+          done
+        }
         
-        # Test endpoint de santé
-        echo "Testing health endpoint..."
-        for i in {1..5}; do
-          if curl -f "${{ secrets.RENDER_URL }}/actuator/health" 2>/dev/null; then
-            echo "✅ Health endpoint OK"
-            break
+        # Test des endpoints
+        if test_health; then
+          echo "🧪 Test des endpoints API..."
+          
+          # Test endpoint players (avec auth basique)
+          echo "Testing players endpoint..."
+          if curl -f -m 10 -u "isis:abc123" "${{ secrets.RENDER_URL }}/players?page=0&size=5" 2>/dev/null; then
+            echo "✅ Players endpoint OK"
           else
-            echo "⚠️ Tentative $i/5 pour health check..."
-            sleep 30
+            echo "⚠️ Players endpoint non accessible"
           fi
-        done
-        
-        # Test endpoint players (avec auth basique)
-        echo "Testing players endpoint..."
-        if curl -f -u "isis:abc123" "${{ secrets.RENDER_URL }}/players?page=0&size=5" 2>/dev/null; then
-          echo "✅ Players endpoint OK"
+          
+          echo "� Tests d'intégration terminés avec succès !"
         else
-          echo "⚠️ Players endpoint non accessible (peut-être encore en cours de déploiement)"
+          echo "💥 Le déploiement semble avoir des problèmes"
+          echo "🔍 Vérifiez les logs Render : https://dashboard.render.com"
+          exit 1
         fi
-        
-        echo "🎯 Tests d'intégration terminés"
