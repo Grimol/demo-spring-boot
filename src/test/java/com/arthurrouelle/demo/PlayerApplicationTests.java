@@ -93,13 +93,13 @@ class PlayerApplicationTests {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
         DocumentContext documentContext = JsonPath.parse(response.getBody());
-        int playerCount = documentContext.read("$.length()");
-        assertThat(playerCount).isEqualTo(1);
+        JSONArray content = documentContext.read("$.content");
+        assertThat(content.size()).isEqualTo(1);
 
-        JSONArray ids = documentContext.read("$..id");
+        JSONArray ids = documentContext.read("$.content[*].id");
         assertThat(ids).containsExactlyInAnyOrder(15);
 
-        JSONArray pseudos = documentContext.read("$..pseudo");
+        JSONArray pseudos = documentContext.read("$.content[*].pseudo");
         assertThat(pseudos).containsExactlyInAnyOrder("IsisTheWarrior");
     }
 
@@ -111,8 +111,8 @@ class PlayerApplicationTests {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
         DocumentContext documentContext = JsonPath.parse(response.getBody());
-        JSONArray page = documentContext.read("$[*]");
-        assertThat(page.size()).isEqualTo(1);
+        JSONArray content = documentContext.read("$.content");
+        assertThat(content.size()).isEqualTo(1);
     }
 
     @Test
@@ -123,10 +123,10 @@ class PlayerApplicationTests {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
         DocumentContext documentContext = JsonPath.parse(response.getBody());
-        JSONArray read = documentContext.read("$[*]");
-        assertThat(read.size()).isEqualTo(1);
+        JSONArray content = documentContext.read("$.content");
+        assertThat(content.size()).isEqualTo(1);
 
-        String pseudo = documentContext.read("$[0].pseudo");
+        String pseudo = documentContext.read("$.content[0].pseudo");
         assertThat(pseudo).isEqualTo("IsisTheWarrior");
     }
 
@@ -138,10 +138,10 @@ class PlayerApplicationTests {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
         DocumentContext documentContext = JsonPath.parse(response.getBody());
-        JSONArray page = documentContext.read("$[*]");
-        assertThat(page.size()).isEqualTo(1);
+        JSONArray content = documentContext.read("$.content");
+        assertThat(content.size()).isEqualTo(1);
 
-        JSONArray pseudos = documentContext.read("$..pseudo");
+        JSONArray pseudos = documentContext.read("$.content[*].pseudo");
         assertThat(pseudos).containsExactlyInAnyOrder("IsisTheWarrior");
     }
 

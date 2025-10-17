@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.IOException;
 
-import org.assertj.core.util.Arrays;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,10 +24,14 @@ class PlayerJsonTest {
 
     @BeforeEach
     void setUp() {
-        players = Arrays.array(
-                new Player(15L, "IsisTheWarrior", "isis", 1500L, 5, 2500L, 140.0, 18.0, 9.0, 1.2, 8.5, 175.0),
-                new Player(25L, "LunaMage", "luna", 800L, 3, 1200L, 120.0, 14.0, 7.0, 0.8, 12.0, 200.0),
-                new Player(35L, "PipouneArcher", "pipoune", 0L, 1, 0L, 100.0, 10.0, 5.0, 1.0, 5.0, 150.0));
+        players = new Player[]{
+                new Player(15L, "IsisTheWarrior", "isis", 
+                1500L, 5, 2500L, 140.0, 18.0, 9.0, 1.2, 8.5, 175.0),
+                new Player(25L, "LunaMage", "luna", 
+                800L, 3, 1200L, 120.0, 14.0, 7.0, 0.8, 12.0, 200.0),
+                new Player(35L, "PipouneArcher", "pipoune", 
+                0L, 1, 0L, 100.0, 10.0, 5.0, 1.0, 5.0, 150.0)
+        };
     }
 
     @Test
@@ -92,7 +95,8 @@ class PlayerJsonTest {
                 }
                 """;
         assertThat(json.parse(expected))
-                .isEqualTo(new Player(15L, "IsisTheWarrior", "isis", 1500L, 5, 2500L, 140.0, 18.0, 9.0, 1.2, 8.5, 175.0));
+                .isEqualTo(new Player(15L, "IsisTheWarrior", "isis", 
+                1500L, 5, 2500L, 140.0, 18.0, 9.0, 1.2, 8.5, 175.0));
         assertThat(json.parseObject(expected).id()).isEqualTo(15L);
         assertThat(json.parseObject(expected).pseudo()).isEqualTo("IsisTheWarrior");
         assertThat(json.parseObject(expected).owner()).isEqualTo("isis");

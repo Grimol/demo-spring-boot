@@ -1,5 +1,6 @@
 package com.arthurrouelle.demo;
 
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -10,7 +11,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
 import java.security.Principal;
-import java.util.List;
 
 
 @RestController
@@ -33,14 +33,14 @@ class PlayerController {
     }
 
     @GetMapping()
-    private ResponseEntity<List<Player>> findAll(Pageable pageable, Principal principal) {
-        Page<Player> page = playerRepository.findByOwner(principal.getName(),
+    private ResponseEntity<Page<Player>> findAll(Pageable pageable, Principal principal) {
+        Page<Player> players = playerRepository.findByOwner(principal.getName(), 
                 PageRequest.of(
-                        pageable.getPageNumber(),
-                        pageable.getPageSize(),
-                        pageable.getSortOr(Sort.by(Sort.Direction.ASC, "pseudo"))
+                    pageable.getPageNumber(),
+                    pageable.getPageSize(),
+                    pageable.getSortOr(Sort.by(Sort.Direction.ASC, "pseudo"))
                 ));
-        return ResponseEntity.ok(page.getContent());
+        return ResponseEntity.ok(players);
     }
 
     @PostMapping()
@@ -65,6 +65,16 @@ class PlayerController {
                 .buildAndExpand(savedPlayer.id())
                 .toUri();
         return ResponseEntity.created(locationOfNewPlayer).build();
+    }
+
+    @DeleteMapping("/{requestedId}")
+    private ResponseEntity<Void> deleteById(@PathVariable Long requestedId, Principal principal) {
+        Long deletedCount = playerRepository.deleteByIdAndOwner(requestedId, principal.getName());
+        if (deletedCount > 0) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
     
     private Player findPlayer(Long requestedId, Principal principal) {

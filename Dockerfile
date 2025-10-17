@@ -18,8 +18,12 @@ RUN mvn -B -ntp -DskipTests -Dproject.build.finalName=app package
 FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
 
+# Créer le répertoire pour SQLite
+RUN mkdir -p /app/data
+
 # Sécurité : exécuter avec un user non-root
-RUN addgroup -S spring && adduser -S spring -G spring
+RUN addgroup -S spring && adduser -S spring -G spring && \
+    chown -R spring:spring /app/data
 USER spring:spring
 
 # Optionnel : variables pour tuning JVM
