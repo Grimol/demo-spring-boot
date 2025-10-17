@@ -19,8 +19,9 @@ class SecurityConfig {
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers("/players/**")
-                        .hasRole("PLAYER"))
+                        .requestMatchers("/actuator/**").permitAll()  // Actuator endpoints publics
+                        .requestMatchers("/players/**").hasRole("PLAYER")  // Players protégé
+                        .anyRequest().authenticated())  // Tout le reste authentifié
                 .httpBasic(Customizer.withDefaults())
                 .csrf(csrf -> csrf.disable());
         return http.build();
